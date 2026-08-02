@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>変形労働時間制の比較検討レポート｜ローゼンボア有限会社</title>
+<style>
+  :root{
+    --ink:#1c1917; --ink-2:#44403c; --ink-3:#78716c;
+    --line:#e7e5e4; --line-2:#d6d3d1;
+    --bg:#fdfcfb; --panel:#ffffff; --tint:#faf7f2;
+    --accent:#a1662f; --accent-soft:#f4ece1;
+    --ok:#2f6b4f; --ok-soft:#e8f2ec;
+    --warn:#a1662f; --warn-soft:#fbf1e4;
+    --ng:#9b3232; --ng-soft:#f9eaea;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",YuGothic,Meiryo,sans-serif;
+    font-size:15px; line-height:1.85; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:0 24px 96px;}
+
+  header.cover{
+    border-bottom:3px solid var(--ink); padding:56px 0 28px; margin-bottom:44px;
+  }
+  .eyebrow{font-size:12px; letter-spacing:.18em; color:var(--accent); font-weight:700; margin-bottom:14px;}
+  h1{font-size:29px; line-height:1.45; margin:0 0 10px; font-weight:700; letter-spacing:.01em;}
+  .subtitle{font-size:16px; color:var(--ink-2); margin:0 0 24px;}
+  .meta{display:flex; flex-wrap:wrap; gap:8px 32px; font-size:13px; color:var(--ink-3);}
+  .meta b{color:var(--ink-2); font-weight:600;}
+
+  h2{
+    font-size:20px; margin:56px 0 18px; padding-bottom:10px;
+    border-bottom:2px solid var(--line-2); font-weight:700; letter-spacing:.01em;
+  }
+  h2 .num{
+    display:inline-block; background:var(--ink); color:#fff; font-size:13px;
+    width:26px; height:26px; line-height:26px; text-align:center; border-radius:4px;
+    margin-right:11px; vertical-align:2px; font-weight:700;
+  }
+  h3{font-size:16px; margin:32px 0 12px; font-weight:700; color:var(--ink);}
+  h4{font-size:14px; margin:22px 0 8px; font-weight:700; color:var(--ink-2);}
+  p{margin:0 0 15px;}
+  ul,ol{margin:0 0 15px; padding-left:1.4em;}
+  li{margin-bottom:7px;}
+  small{font-size:12.5px; color:var(--ink-3); line-height:1.7;}
+  em{font-style:normal; background:linear-gradient(transparent 62%, #f6e2c4 62%); font-weight:600;}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px; background:var(--tint); padding:1px 5px; border-radius:3px;}
+
+  /* 結論ボックス */
+  .verdict{
+    background:var(--panel); border:2px solid var(--ink); border-radius:8px;
+    padding:26px 28px; margin:0 0 8px;
+  }
+  .verdict .tag{
+    display:inline-block; background:var(--ink); color:#fff; font-size:11px; font-weight:700;
+    letter-spacing:.12em; padding:4px 11px; border-radius:3px; margin-bottom:14px;
+  }
+  .verdict h3{margin:0 0 12px; font-size:20px;}
+  .verdict p:last-child{margin-bottom:0;}
+
+  /* カード */
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    padding:22px 24px; margin:0 0 20px;
+  }
+  .card.tinted{background:var(--tint); border-color:var(--line-2);}
+  .card > :last-child{margin-bottom:0;}
+
+  .callout{
+    border-left:4px solid var(--accent); background:var(--accent-soft);
+    padding:16px 20px; border-radius:0 6px 6px 0; margin:0 0 20px; font-size:14.5px;
+  }
+  .callout > :last-child{margin-bottom:0;}
+  .callout.ng{border-left-color:var(--ng); background:var(--ng-soft);}
+  .callout.ok{border-left-color:var(--ok); background:var(--ok-soft);}
+  .callout .lbl{font-weight:700; display:block; margin-bottom:6px; font-size:13px; letter-spacing:.04em;}
+
+  /* KPI */
+  .kpis{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:0 0 22px;}
+  .kpi{
+    background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    padding:18px 16px; text-align:center;
+  }
+  .kpi .k-label{font-size:12px; color:var(--ink-3); margin-bottom:9px; line-height:1.5;}
+  .kpi .k-value{font-size:27px; font-weight:700; letter-spacing:-.01em; line-height:1.15;}
+  .kpi .k-unit{font-size:13px; font-weight:600; margin-left:2px;}
+  .kpi .k-note{font-size:11.5px; color:var(--ink-3); margin-top:7px;}
+  .kpi.is-ng .k-value{color:var(--ng);} .kpi.is-ng{background:var(--ng-soft); border-color:#e8cccc;}
+  .kpi.is-warn .k-value{color:var(--warn);} .kpi.is-warn{background:var(--warn-soft); border-color:#ecd9bd;}
+  .kpi.is-ok .k-value{color:var(--ok);} .kpi.is-ok{background:var(--ok-soft); border-color:#c9e0d3;}
+
+  /* テーブル */
+  table{width:100%; border-collapse:collapse; margin:0 0 20px; font-size:14px;}
+  th,td{border:1px solid var(--line-2); padding:9px 11px; text-align:left; vertical-align:top;}
+  th{background:var(--tint); font-weight:700; font-size:13px; color:var(--ink-2);}
+  td.num,th.num{text-align:right; font-variant-numeric:tabular-nums;}
+  td.c,th.c{text-align:center;}
+  tbody tr:nth-child(even) td{background:#fdfdfc;}
+  .t-wrap{overflow-x:auto; margin-bottom:20px;}
+  .t-wrap table{margin-bottom:0; min-width:560px;}
+
+  .mark-o{color:var(--ok); font-weight:700;}
+  .mark-t{color:var(--warn); font-weight:700;}
+  .mark-x{color:var(--ng); font-weight:700;}
+
+  /* カレンダー */
+  .cal{width:100%; border-collapse:collapse; font-size:13px; margin-bottom:14px;}
+  .cal th{background:var(--ink); color:#fff; text-align:center; padding:7px 2px; font-size:12px; border-color:#3c3835;}
+  .cal th.sun{background:#7a2f2f;} .cal th.sat{background:#2f4a6b;}
+  .cal th.wk{background:#57534e; font-size:11px; width:74px;}
+  .cal td{height:60px; padding:5px 6px; text-align:center; vertical-align:top;}
+  .cal td .d{font-size:11px; color:var(--ink-3); display:block; text-align:left;}
+  .cal td .h{font-size:17px; font-weight:700; display:block; margin-top:4px;}
+  .cal td .t{font-size:9.5px; color:var(--ink-3); display:block; line-height:1.3;}
+  .cal td.off{background:#f5f5f4;} .cal td.off .h{color:#a8a29e; font-size:13px; font-weight:600;}
+  .cal td.busy{background:var(--warn-soft);} .cal td.peak{background:#f6dfc0;}
+  .cal td.empty{background:#fafaf9;}
+  .cal td.wk{background:var(--tint); vertical-align:middle; font-size:12px; text-align:center; line-height:1.6;}
+  .cal td.wk b{display:block; font-size:16px;}
+
+  .legend{display:flex; flex-wrap:wrap; gap:7px 18px; font-size:12px; color:var(--ink-3); margin-bottom:26px;}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .sw{width:13px; height:13px; border:1px solid var(--line-2); border-radius:2px; display:inline-block;}
+
+  /* 手順 */
+  .steps{counter-reset:s; list-style:none; padding:0; margin:0 0 20px;}
+  .steps li{
+    counter-increment:s; position:relative; padding-left:42px; margin-bottom:14px;
+  }
+  .steps li::before{
+    content:counter(s); position:absolute; left:0; top:1px;
+    width:26px; height:26px; line-height:26px; text-align:center;
+    background:var(--accent-soft); color:var(--accent); border-radius:50%;
+    font-size:13px; font-weight:700;
+  }
+  .steps li b{display:block; margin-bottom:2px;}
+
+  .formula{
+    background:var(--tint); border:1px solid var(--line-2); border-radius:6px;
+    padding:16px 20px; margin:0 0 20px; font-size:14px;
+  }
+  .formula .row{display:flex; gap:12px; padding:7px 0; border-bottom:1px dashed var(--line-2);}
+  .formula .row:last-child{border-bottom:none;}
+  .formula .step{flex:0 0 78px; font-weight:700; color:var(--accent); font-size:13px;}
+
+  footer{margin-top:64px; padding-top:22px; border-top:1px solid var(--line-2); font-size:12.5px; color:var(--ink-3);}
+
+  @media (max-width:640px){
+    .kpis{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .wrap{padding:0 16px 64px;}
+    .cal td{height:auto;}
+  }
+  @media print{
+    body{background:#fff; font-size:11pt;}
+    h2{page-break-after:avoid;} .card,.callout,.verdict,table{page-break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="cover">
+  <div class="eyebrow">労務管理体制の検討資料</div>
+  <h1>変形労働時間制の導入検討レポート<br>― 3つの選択肢の比較 ―</h1>
+  <p class="subtitle">早朝勤務・土日祝稼働のパン製造小売業における、労務管理と勤怠集計の実務比較</p>
+  <div class="meta">
+    <span><b>宛先</b>　ローゼンボア有限会社　代表取締役　高崎 健人 様</span>
+    <span><b>作成</b>　社会保険労務士法人キャリアデザイン　杉山 史和</span>
+    <span><b>作成日</b>　2026年8月2日</span>
+  </div>
+</header>
+
+<!-- ============ 結論 ============ -->
+<div class="verdict">
+  <span class="tag">結論</span>
+  <h3>「1か月単位の変形労働時間制」の導入をおすすめします</h3>
+  <p>御社は <em>早朝5時30分始業・土日祝も営業・繁忙日が読みにくい</em> という働き方です。この形は、1年単位の変形労働時間制がもつ「1日10時間まで」「連続6日まで」「1年分のシフトを事前確定」という制約と正面からぶつかります。</p>
+  <p>一方、1か月単位であれば <em>1日の労働時間に上限がなく</em>、毎月のシフト表で繁閑を調整できます。手続きも労使協定が不要で、就業規則の定めだけで導入できます。</p>
+  <p style="margin-bottom:0"><small>※ 本レポートの数値は、現在の勤務時間（始業5:30／終業14:30／休憩1時間）と、社員6名・パート約20名という体制をもとにした仮置きの試算です。実際のシフト表・タイムカードをいただければ、御社の実数に置き換えて再計算します。</small></p>
+</div>
+
+<!-- ============ 前提 ============ -->
+<h2><span class="num">0</span>検討の前提</h2>
+
+<h3>御社の現況</h3>
+<table>
+  <tr><th style="width:180px">項目</th><th>内容</th></tr>
+  <tr><td>始業・終業</td><td>午前5時30分 ～ 午後2時30分（休憩1時間＝実働8時間）</td></tr>
+  <tr><td>休日</td><td>シフト表により各従業員につき週1日以上を指定</td></tr>
+  <tr><td>人員体制</td><td>正社員6名（うちベトナム人2名）／パートタイマー約20名</td></tr>
+  <tr><td>営業実態</td><td>土曜・日曜・祝日も営業</td></tr>
+  <tr><td>繁忙期</td><td>クリスマス、年末、バレンタイン、ゴールデンウィーク等</td></tr>
+</table>
+
+<h3>試算に使うモデルシフト（2026年12月・正社員1名）</h3>
+<p>3つの案を同じ土俵で比べるため、次の「12月の働き方」を共通のモデルとします。クリスマス前後に山があり、月の前半を短めにして帳尻を合わせる、という御社で実際に起こりそうな形にしています。</p>
+
+<table class="cal">
+  <tr>
+    <th class="wk">週計</th>
+    <th class="sun">日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th class="sat">土</th>
+  </tr>
+  <tr>
+    <td class="wk"><b>29h</b>第1週</td>
+    <td class="empty"></td><td class="empty"></td>
+    <td><span class="d">1</span><span class="h">7</span><span class="t">5:30-13:30</span></td>
+    <td class="off"><span class="d">2</span><span class="h">休</span></td>
+    <td><span class="d">3</span><span class="h">7</span><span class="t">5:30-13:30</span></td>
+    <td><span class="d">4</span><span class="h">7</span><span class="t">5:30-13:30</span></td>
+    <td><span class="d">5</span><span class="h">8</span><span class="t">5:30-14:30</span></td>
+  </tr>
+  <tr>
+    <td class="wk"><b>35h</b>第2週</td>
+    <td><span class="d">6</span><span class="h">8</span><span class="t">5:30-14:30</span></td>
+    <td class="off"><span class="d">7</span><span class="h">休</span></td>
+    <td><span class="d">8</span><span class="h">6</span><span class="t">5:30-12:30</span></td>
+    <td><span class="d">9</span><span class="h">6</span><span class="t">5:30-12:30</span></td>
+    <td class="off"><span class="d">10</span><span class="h">休</span></td>
+    <td><span class="d">11</span><span class="h">7</span><span class="t">5:30-13:30</span></td>
+    <td><span class="d">12</span><span class="h">8</span><span class="t">5:30-14:30</span></td>
+  </tr>
+  <tr>
+    <td class="wk"><b>35h</b>第3週</td>
+    <td><span class="d">13</span><span class="h">8</span><span class="t">5:30-14:30</span></td>
+    <td class="off"><span class="d">14</span><span class="h">休</span></td>
+    <td><span class="d">15</span><span class="h">6</span><span class="t">5:30-12:30</span></td>
+    <td><span class="d">16</span><span class="h">6</span><span class="t">5:30-12:30</span></td>
+    <td class="off"><span class="d">17</span><span class="h">休</span></td>
+    <td><span class="d">18</span><span class="h">7</span><span class="t">5:30-13:30</span></td>
+    <td><span class="d">19</span><span class="h">8</span><span class="t">5:30-14:30</span></td>
+  </tr>
+  <tr>
+    <td class="wk"><b>52h</b>第4週<br><small style="font-size:10px">繁忙</small></td>
+    <td class="busy"><span class="d">20</span><span class="h">10</span><span class="t">5:30-16:30</span></td>
+    <td class="off"><span class="d">21</span><span class="h">休</span></td>
+    <td class="off"><span class="d">22</span><span class="h">休</span></td>
+    <td class="busy"><span class="d">23</span><span class="h">10</span><span class="t">5:30-16:30</span></td>
+    <td class="peak"><span class="d">24</span><span class="h">12</span><span class="t">5:00-18:00</span></td>
+    <td class="peak"><span class="d">25</span><span class="h">12</span><span class="t">5:00-18:00</span></td>
+    <td><span class="d">26</span><span class="h">8</span><span class="t">5:30-14:30</span></td>
+  </tr>
+  <tr>
+    <td class="wk"><b>26h</b>第5週</td>
+    <td><span class="d">27</span><span class="h">8</span><span class="t">5:30-14:30</span></td>
+    <td class="off"><span class="d">28</span><span class="h">休</span></td>
+    <td class="busy"><span class="d">29</span><span class="h">9</span><span class="t">5:30-15:30</span></td>
+    <td class="busy"><span class="d">30</span><span class="h">9</span><span class="t">5:30-15:30</span></td>
+    <td class="off"><span class="d">31</span><span class="h">休</span></td>
+    <td class="empty"></td><td class="empty"></td>
+  </tr>
+</table>
+<div class="legend">
+  <span><i class="sw" style="background:#fff"></i>通常日（6～8時間）</span>
+  <span><i class="sw" style="background:#fbf1e4"></i>繁忙日（9～10時間）</span>
+  <span><i class="sw" style="background:#f6dfc0"></i>最繁忙日（12時間）</span>
+  <span><i class="sw" style="background:#f5f5f4"></i>休日</span>
+  <span>週は日曜起算</span>
+</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="k-label">月間の総労働時間</div><div class="k-value">177<span class="k-unit">時間</span></div><div class="k-note">労働日22日／休日9日</div></div>
+  <div class="kpi"><div class="k-label">12月（31日）の法定の総枠<br><small>40時間 × 31日 ÷ 7日</small></div><div class="k-value">177.1<span class="k-unit">時間</span></div><div class="k-note">この枠に収まっている</div></div>
+  <div class="kpi"><div class="k-label">最大の連続労働日数</div><div class="k-value">5<span class="k-unit">日</span></div><div class="k-note">12/23～12/27</div></div>
+</div>
+
+<p><small>賃金の試算には、月給30万円・年間所定労働時間2,080時間（年間休日105日想定）から算出した時間単価 <b>1,731円</b> を用います。［要確認：実際の給与水準に置き換えます］</small></p>
+
+<!-- ============ ① ============ -->
+<h2><span class="num">①</span>変形労働時間制を使わない場合（原則どおりの管理）</h2>
+
+<h3>労務管理の考え方</h3>
+<p>労働基準法の原則である <b>「1日8時間・1週40時間」</b> をそのまま守る形です。この枠を1分でも超えれば、その時点で時間外労働となり、割増賃金（1.25倍）が発生します。</p>
+
+<h4>現場で何が起きるか</h4>
+<ul>
+  <li><b>クリスマスの12時間シフトは、毎年必ず割増賃金を生みます。</b>8時間を超えた4時間分は例外なく時間外です。</li>
+  <li><b>「今日は暇だから6時間で上がってもらう」が、繁忙日の埋め合わせになりません。</b>短い日をいくら作っても、長い日の時間外は消えません。</li>
+  <li>週に6日入る週があると、1日8時間ずつでも週48時間となり、8時間分が時間外になります。</li>
+</ul>
+
+<h3>勤怠集計の手順</h3>
+<div class="formula">
+  <div class="row"><span class="step">STEP 1</span><span>各日について、実労働時間が <b>8時間</b> を超えた分を拾う</span></div>
+  <div class="row"><span class="step">STEP 2</span><span>各週について、STEP 1 で拾った時間を除いた残りが <b>40時間</b> を超えた分を拾う</span></div>
+  <div class="row"><span class="step">STEP 3</span><span>法定休日（週1日）に働いた時間があれば、別枠で1.35倍として集計する</span></div>
+</div>
+<p>これを毎日・毎週、全員分について行います。パートを含め26名分を毎月手作業で集計するのは、実務としてかなりの負担です。</p>
+
+<h3>モデルシフトでの計算結果</h3>
+<div class="t-wrap">
+<table>
+  <tr><th>集計段階</th><th>該当箇所</th><th class="num">時間外</th></tr>
+  <tr><td>STEP 1：1日8時間超</td><td>12/20（10h）＋2h、12/23（10h）＋2h、12/24（12h）＋4h、12/25（12h）＋4h、12/29（9h）＋1h、12/30（9h）＋1h</td><td class="num"><b>14.0h</b></td></tr>
+  <tr><td>STEP 2：1週40時間超</td><td>第4週は52時間だが、STEP 1で12時間を控除すると40時間ちょうど → 超過なし</td><td class="num">0.0h</td></tr>
+  <tr><td colspan="2" style="text-align:right"><b>時間外労働 合計</b></td><td class="num"><b>14.0h</b></td></tr>
+  <tr><td colspan="2" style="text-align:right">割増賃金（1,731円 × 1.25 × 14.0h）</td><td class="num"><b>30,288円</b></td></tr>
+</table>
+</div>
+
+<div class="kpis">
+  <div class="kpi is-ng"><div class="k-label">12月の時間外労働</div><div class="k-value">14.0<span class="k-unit">時間</span></div><div class="k-note">社員1名あたり</div></div>
+  <div class="kpi is-ng"><div class="k-label">追加で支払う賃金</div><div class="k-value">30,288<span class="k-unit">円</span></div><div class="k-note">社員1名あたり／月</div></div>
+  <div class="kpi is-ng"><div class="k-label">正社員6名分</div><div class="k-value">約18<span class="k-unit">万円</span></div><div class="k-note">12月のみ・仮置き試算</div></div>
+</div>
+
+<div class="callout">
+  <span class="lbl">ここがポイント</span>
+  <p style="margin-bottom:0">月の総労働時間177時間は、法定の総枠177.1時間の <b>範囲内に収まっています</b>。つまり「働きすぎている」わけではありません。それでも、日ごとに区切って見るというルールのために14時間分の割増賃金が発生します。<b>これが、変形労働時間制を使わないことによる損失です。</b></p>
+</div>
+
+<!-- ============ ② ============ -->
+<h2><span class="num">②</span>1年単位の変形労働時間制を使う場合</h2>
+
+<h3>労務管理の考え方</h3>
+<p>1年（または1か月超1年以内）を通じて平均週40時間に収まればよい、という制度です。繁忙期に長め・閑散期に短めというメリハリを、年単位で大きくつけられます。<br>ただし、その代わりに <b>強い制限</b> がかかります。</p>
+
+<div class="t-wrap">
+<table>
+  <tr><th style="width:200px">制限の内容</th><th class="c" style="width:110px">御社の判定</th><th>コメント</th></tr>
+  <tr><td>1日の上限　<b>10時間</b></td><td class="c"><span class="mark-x">✕ 不可</span></td><td><b>12/24・12/25の12時間シフトが組めません。</b>制度上の絶対的な上限です。</td></tr>
+  <tr><td>1週の上限　<b>52時間</b></td><td class="c"><span class="mark-t">△ 限界</span></td><td>第4週が52時間ちょうど。これ以上は1分も伸ばせません。</td></tr>
+  <tr><td>連続労働日数　<b>6日</b></td><td class="c"><span class="mark-o">○</span></td><td>モデルでは最大5日。ただし欠員が出た週に7日連続になると即アウトです。</td></tr>
+  <tr><td>年間労働日数　<b>280日</b></td><td class="c"><span class="mark-t">△</span></td><td>月22日×12か月＝264日。年間休日85日以上の確保が常時必要になります。</td></tr>
+  <tr><td>労使協定の締結・届出</td><td class="c"><span class="mark-t">△ 必須</span></td><td>就業規則だけでは導入できません。毎年締結し直し、労基署に届け出ます。</td></tr>
+  <tr><td>1年分のシフト事前確定</td><td class="c"><span class="mark-x">✕ 困難</span></td><td>対象期間の労働日と各日の労働時間を、あらかじめ確定させる義務があります。</td></tr>
+  <tr><td>途中変更</td><td class="c"><span class="mark-x">✕ 不可</span></td><td>いったん定めたカレンダーは、原則として途中で変えられません。</td></tr>
+  <tr><td>中途入退社の精算</td><td class="c"><span class="mark-x">✕ 負担大</span></td><td>パートの入退社のたびに、在籍期間を平均して週40時間超の分を精算します。</td></tr>
+  <tr><td>週44時間の特例</td><td class="c"><span class="mark-x">✕ 使えない</span></td><td>1年単位を選ぶと、週40時間で計算せざるを得ません。</td></tr>
+</table>
+</div>
+
+<h3>勤怠集計の手順</h3>
+<div class="formula">
+  <div class="row"><span class="step">STEP 1</span><span>各日について、<b>あらかじめ定めたカレンダー上の時間</b>（8時間以下と定めた日は8時間）を超えた分を拾う</span></div>
+  <div class="row"><span class="step">STEP 2</span><span>各週について、<b>カレンダー上の週の時間</b>（40時間以下と定めた週は40時間）を超えた分を拾う（STEP 1の分を除く）</span></div>
+  <div class="row"><span class="step">STEP 3</span><span>対象期間（1年）の終了時に、<b>年間の総枠2,085.7時間</b>を超えた分を拾う（STEP 1・2の分を除く）</span></div>
+  <div class="row"><span class="step">STEP 4</span><span>期間途中で入社・退社した人は、その在籍期間で平均週40時間を超えた分を <b>別途精算</b> する</span></div>
+</div>
+<p>①③と比べ、<b>年間の総枠チェックが翌年まで確定しない</b>のが実務上やっかいなところです。また、カレンダーを労使協定に添付して届け出るため、「シフトを直したいので変えます」ができません。</p>
+
+<h3>モデルシフトでの結論</h3>
+<div class="callout ng">
+  <span class="lbl">そもそも、このシフトが組めません</span>
+  <p>1日10時間の上限があるため、12月24日・25日の <b>12時間シフトが制度上、設定できません</b>。10時間に抑えると、両日で合計4時間分の作業が余ります。この4時間を埋めるには、他の従業員を追加投入するか、時間外労働として処理するしかありません。</p>
+  <p style="margin-bottom:0">後者を選んだ場合、10時間を超える2時間×2日＝4時間が時間外となり、割増賃金は 8,655円。金額だけを見れば①より安くなりますが、<b>「毎年決まってカレンダー上の時間を超える」設計は制度の趣旨に反し</b>、労働基準監督署の調査で指摘を受ける典型例です。</p>
+</div>
+
+<div class="callout">
+  <span class="lbl">1年単位が向いているのはどんな会社か</span>
+  <p style="margin-bottom:0">季節による繁閑差が明確で、<b>閑散期にまとめて休業日を置ける</b>会社です。たとえば「夏場は売上が落ちるので週休3日にする」といった運用ができるなら、年間休日を大きく増やしつつ総労働時間を圧縮できます。御社が今後そうした運用に踏み切るなら、あらためて検討する価値があります。</p>
+</div>
+
+<!-- ============ ③ ============ -->
+<h2><span class="num">③</span>1か月単位の変形労働時間制を使う場合<span style="font-size:13px; color:var(--ok); margin-left:10px;">◀ 推奨</span></h2>
+
+<h3>労務管理の考え方</h3>
+<p>1か月（賃金計算期間の1日～末日に合わせるのが実務的です）を平均して週40時間に収まればよい、という制度です。<b>1日・1週の労働時間に上限がありません。</b>クリスマスに12時間、閑散日に6時間、という組み方がそのままできます。</p>
+
+<div class="t-wrap">
+<table>
+  <tr><th style="width:200px">項目</th><th class="c" style="width:110px">御社の判定</th><th>コメント</th></tr>
+  <tr><td>1日の上限</td><td class="c"><span class="mark-o">○ なし</span></td><td>12時間シフトも、必要なら14時間シフトも設定できます。</td></tr>
+  <tr><td>1週の上限</td><td class="c"><span class="mark-o">○ なし</span></td><td>月の総枠内であれば、52時間の週があっても問題ありません。</td></tr>
+  <tr><td>連続労働日数</td><td class="c"><span class="mark-o">○ 制限なし</span></td><td>週1日（または4週4日）の法定休日を確保すれば足ります。</td></tr>
+  <tr><td>年間労働日数</td><td class="c"><span class="mark-o">○ 制限なし</span></td><td>年間休日日数の縛りがありません。</td></tr>
+  <tr><td>導入手続</td><td class="c"><span class="mark-o">○ 軽い</span></td><td><b>労使協定は不要。</b>就業規則に定めて労基署に届け出るだけです。</td></tr>
+  <tr><td>シフトの事前確定</td><td class="c"><span class="mark-t">△</span></td><td>前月末までに翌月のシフト表を確定・周知する必要があります。</td></tr>
+  <tr><td>中途入退社の精算</td><td class="c"><span class="mark-o">○ 不要</span></td><td>1年単位のような精算義務はありません。</td></tr>
+  <tr><td>月をまたぐ調整</td><td class="c"><span class="mark-t">△ 不可</span></td><td>12月の超過分を1月で取り戻すことはできません（後述）。</td></tr>
+</table>
+</div>
+
+<h3>勤怠集計の手順</h3>
+<div class="formula">
+  <div class="row"><span class="step">STEP 1</span><span>各日について、<b>シフト表で定めた時間</b>（8時間以下と定めた日は8時間）を超えた分を拾う</span></div>
+  <div class="row"><span class="step">STEP 2</span><span>各週について、<b>シフト表で定めた週の時間</b>（40時間以下と定めた週は40時間）を超えた分を拾う（STEP 1の分を除く）</span></div>
+  <div class="row"><span class="step">STEP 3</span><span>その月の実労働時間の合計が <b>月の総枠</b> を超えた分を拾う（STEP 1・2の分を除く）</span></div>
+  <div class="row"><span class="step">STEP 4</span><span>法定休日労働（1.35）と深夜労働（0.25／午後10時～午前5時）は、別枠で加算する</span></div>
+</div>
+
+<h4>月の総枠（1か月の法定労働時間の上限）</h4>
+<table style="max-width:520px">
+  <tr><th class="c">月の日数</th><th class="num">総枠</th><th class="c">該当月</th></tr>
+  <tr><td class="c">31日</td><td class="num"><b>177.1時間</b></td><td class="c">1・3・5・7・8・10・12月</td></tr>
+  <tr><td class="c">30日</td><td class="num"><b>171.4時間</b></td><td class="c">4・6・9・11月</td></tr>
+  <tr><td class="c">29日</td><td class="num"><b>165.7時間</b></td><td class="c">2月（閏年）</td></tr>
+  <tr><td class="c">28日</td><td class="num"><b>160.0時間</b></td><td class="c">2月</td></tr>
+</table>
+<p><small>シフトを組んだ時点でこの枠に収まっているかを確認すれば、月末の集計で慌てることがなくなります。<b>実務上いちばん大事なチェックポイントです。</b></small></p>
+
+<h3>モデルシフトでの計算結果</h3>
+<div class="t-wrap">
+<table>
+  <tr><th>集計段階</th><th>判定</th><th class="num">時間外</th></tr>
+  <tr><td>STEP 1：シフト表の各日の時間を超過</td><td>タイムカードどおりに勤務 → 超過なし</td><td class="num">0.0h</td></tr>
+  <tr><td>STEP 2：シフト表の各週の時間を超過</td><td>第4週52時間もシフトどおり → 超過なし</td><td class="num">0.0h</td></tr>
+  <tr><td>STEP 3：月の総枠177.1時間を超過</td><td>実労働177時間 ≦ 177.1時間 → 超過なし</td><td class="num">0.0h</td></tr>
+  <tr><td colspan="2" style="text-align:right"><b>時間外労働 合計</b></td><td class="num"><b>0.0h</b></td></tr>
+  <tr><td colspan="2" style="text-align:right">割増賃金</td><td class="num"><b>0円</b></td></tr>
+</table>
+</div>
+
+<div class="kpis">
+  <div class="kpi is-ok"><div class="k-label">12月の時間外労働</div><div class="k-value">0.0<span class="k-unit">時間</span></div><div class="k-note">①より14時間の削減</div></div>
+  <div class="kpi is-ok"><div class="k-label">①と比べた削減額</div><div class="k-value">30,288<span class="k-unit">円</span></div><div class="k-note">社員1名あたり／月</div></div>
+  <div class="kpi is-ok"><div class="k-label">12時間シフト</div><div class="k-value">可能</div><div class="k-note">②では制度上組めない</div></div>
+</div>
+
+<div class="callout ok">
+  <span class="lbl">なぜ時間外がゼロになるのか</span>
+  <p style="margin-bottom:0">同じ177時間を働いていても、①は「1日8時間」という物差しで測るため14時間がはみ出します。③は <b>シフト表で定めた時間そのものが所定労働時間になる</b> ので、はみ出しません。<b>働き方は一切変えていない</b>のに、割増賃金だけが消えるのがこの制度の効果です。</p>
+</div>
+
+<div class="callout">
+  <span class="lbl">正直に申し上げる注意点</span>
+  <p>1か月単位は、<b>月をまたいだ調整ができません。</b>12月の総枠を超えてしまった分を、翌1月の余裕で埋め合わせることはできないため、<b>シフトを組む段階で月の総枠内に収める</b>ことが絶対条件になります。</p>
+  <p style="margin-bottom:0">また、月の途中で会社が一方的にシフトを変更すると、<b>制度そのものが無効と判断される</b>おそれがあります（判例でも争点になっています）。シフトの確定と周知は必ず前月末までに行ってください。</p>
+</div>
+
+<!-- ============ 比較 ============ -->
+<h2><span class="num">4</span>3案の比較</h2>
+
+<div class="t-wrap">
+<table>
+  <tr>
+    <th style="width:190px">比較項目</th>
+    <th class="c">① 使わない</th>
+    <th class="c">② 1年単位</th>
+    <th class="c" style="background:var(--ok-soft)">③ 1か月単位</th>
+  </tr>
+  <tr><td>根拠条文</td><td class="c">労基法32条</td><td class="c">労基法32条の4</td><td class="c" style="background:#f7fbf9">労基法32条の2</td></tr>
+  <tr><td>12月の時間外（1名）</td><td class="c"><span class="mark-x">14.0時間</span></td><td class="c">―（シフト不可）</td><td class="c" style="background:#f7fbf9"><span class="mark-o">0時間</span></td></tr>
+  <tr><td>12月の割増賃金（1名）</td><td class="c"><span class="mark-x">30,288円</span></td><td class="c">―</td><td class="c" style="background:#f7fbf9"><span class="mark-o">0円</span></td></tr>
+  <tr><td>12時間シフトの可否</td><td class="c"><span class="mark-t">△ 割増発生</span></td><td class="c"><span class="mark-x">✕ 不可</span></td><td class="c" style="background:#f7fbf9"><span class="mark-o">○ 可能</span></td></tr>
+  <tr><td>1日の上限</td><td class="c">8時間</td><td class="c"><span class="mark-x">10時間</span></td><td class="c" style="background:#f7fbf9"><span class="mark-o">上限なし</span></td></tr>
+  <tr><td>1週の上限</td><td class="c">40時間</td><td class="c"><span class="mark-t">52時間</span></td><td class="c" style="background:#f7fbf9"><span class="mark-o">上限なし</span></td></tr>
+  <tr><td>連続労働日数の制限</td><td class="c">なし</td><td class="c"><span class="mark-x">6日</span></td><td class="c" style="background:#f7fbf9"><span class="mark-o">なし</span></td></tr>
+  <tr><td>年間労働日数の制限</td><td class="c">なし</td><td class="c"><span class="mark-x">280日</span></td><td class="c" style="background:#f7fbf9"><span class="mark-o">なし</span></td></tr>
+  <tr><td>労使協定</td><td class="c">不要</td><td class="c"><span class="mark-x">必須・毎年更新</span></td><td class="c" style="background:#f7fbf9"><span class="mark-o">不要</span></td></tr>
+  <tr><td>労基署への届出</td><td class="c">不要</td><td class="c">必要</td><td class="c" style="background:#f7fbf9">就業規則の届出のみ</td></tr>
+  <tr><td>シフトの確定タイミング</td><td class="c">随時</td><td class="c"><span class="mark-x">1年前</span></td><td class="c" style="background:#f7fbf9"><span class="mark-t">前月末まで</span></td></tr>
+  <tr><td>期間途中の変更</td><td class="c">自由</td><td class="c"><span class="mark-x">原則不可</span></td><td class="c" style="background:#f7fbf9"><span class="mark-t">原則不可（翌月から変更可）</span></td></tr>
+  <tr><td>パートの入退社時の精算</td><td class="c">不要</td><td class="c"><span class="mark-x">必要</span></td><td class="c" style="background:#f7fbf9"><span class="mark-o">不要</span></td></tr>
+  <tr><td>勤怠集計の手間</td><td class="c"><span class="mark-x">毎日・毎週</span></td><td class="c"><span class="mark-x">日・週・年＋精算</span></td><td class="c" style="background:#f7fbf9"><span class="mark-t">日・週・月</span></td></tr>
+  <tr><td style="background:var(--tint)"><b>総合評価</b></td>
+      <td class="c" style="background:var(--tint)"><b class="mark-t">可</b><br><small>ただし割増が出続ける</small></td>
+      <td class="c" style="background:var(--tint)"><b class="mark-x">不適</b><br><small>制約が実態に合わない</small></td>
+      <td class="c" style="background:var(--ok-soft)"><b class="mark-o">最適</b><br><small>実務と噛み合う</small></td></tr>
+</table>
+</div>
+
+<!-- ============ 結論 ============ -->
+<h2><span class="num">5</span>結論 ― ③ 1か月単位が効果的です</h2>
+
+<div class="verdict">
+  <span class="tag">推奨</span>
+  <h3>1か月単位の変形労働時間制を導入する</h3>
+  <p><b>理由1｜早朝勤務と長時間シフトを両立できる唯一の選択肢です。</b><br>クリスマスや年末のように12時間の稼働が必要な日がある以上、1日10時間で頭打ちになる1年単位は選べません。1か月単位には1日の上限がありません。</p>
+  <p><b>理由2｜土日祝稼働のシフト運用と噛み合います。</b><br>連続労働日数や年間労働日数の縛りがないため、欠員が出た週に人を厚く入れても制度違反になりません。土日祝を回す職場では、この自由度が効いてきます。</p>
+  <p><b>理由3｜同じ働き方のまま、割増賃金が消えます。</b><br>モデル試算では、社員1名あたり月30,288円、正社員6名なら12月だけで約18万円の差が出ました。従業員の労働時間は1分も増えていません。</p>
+  <p><b>理由4｜手続きが軽く、御社の負担がほとんどありません。</b><br>労使協定が不要で、就業規則に条文を入れるだけで導入できます。神奈川県奨励金・人材確保等支援助成金のための就業規則整備と<b>同じタイミングでまとめて処理できます。</b></p>
+  <p style="margin-bottom:0"><b>理由5｜パートの入退社があっても精算作業が発生しません。</b><br>約20名のパートタイマーを抱える御社では、1年単位を選んだ場合の精算事務が毎年重くのしかかります。</p>
+</div>
+
+<!-- ============ 進め方 ============ -->
+<h2><span class="num">6</span>導入する場合の進め方</h2>
+
+<ol class="steps">
+  <li><b>就業規則への規定（当事務所で対応します）</b>
+    現在作成中の就業規則に、1か月単位の変形労働時間制の条項（対象者の範囲・変形期間・起算日・各日の労働時間の特定方法）を盛り込みます。</li>
+  <li><b>シフトパターンの整理</b>
+    6時間・7時間・8時間・9時間・10時間・12時間といった勤務パターンごとに、始業・終業時刻と休憩時間を確定させ、就業規則に明記します。<br>
+    <small>※ 1日8時間を超える日は休憩1時間以上が必要です。12時間シフトでは分割して2回に分ける運用をおすすめします。</small></li>
+  <li><b>従業員代表からの意見聴取</b>
+    就業規則の変更手続として、従業員代表の意見書を取得します。労使協定は不要です。</li>
+  <li><b>労働基準監督署への届出</b>
+    就業規則と意見書を提出します。助成金の申請書類と同時進行で進めます。</li>
+  <li><b>シフト表フォーマットの整備</b>
+    各人の各日の始業・終業時刻と、その月の合計時間・総枠との差が一目で分かる様式をご用意します。前月末までに確定・周知する運用に切り替えます。</li>
+  <li><b>従業員への説明</b>
+    「日によって終業時刻が変わるが、月の合計は変わらない」ことを丁寧に説明します。ベトナム人従業員2名向けには、多言語版の資料もご用意できます。</li>
+</ol>
+
+<!-- ============ 要確認 ============ -->
+<h2><span class="num">7</span>ご確認いただきたい事項</h2>
+
+<div class="card tinted">
+  <ol style="margin-bottom:0">
+    <li><b>定休日と営業日</b>　― 定休日はいつでしょうか。祝日の営業有無、および店舗と工房で稼働日が異なるかもあわせてお教えください。</li>
+    <li><b>実際の入店時刻</b>　― 仕込みで午前5時前に入る運用はありますか。ある場合、<b>午前5時までの時間には深夜割増（0.25倍）が発生し、これは変形労働時間制では回避できません。</b>健康診断も年2回必要になります。</li>
+    <li><b>年間休日日数の実績</b>　― 現在、正社員は年間何日休んでいますか。総枠の設計に直結します。</li>
+    <li><b>事業場の単位と人数</b>　― 工房と店舗は別の場所ですか。それぞれ常時何名でしょうか。<b>1事業場あたり常時10人未満であれば、週44時間の特例が使える可能性があります</b>（1か月単位なら併用可、1年単位では併用不可）。</li>
+    <li><b>正社員とパートで制度を分けるか</b>　― パートタイマーの所定労働時間が1日8時間以内・週40時間以内に収まっているなら、変形労働時間制の対象は正社員のみとする設計も可能です。</li>
+    <li><b>直近3か月分のシフト表とタイムカード</b>　― ご提供いただければ、本レポートの試算を御社の実数に置き換えて再計算します。</li>
+  </ol>
+</div>
+
+<footer>
+  <p><b>社会保険労務士法人キャリアデザイン</b>　特定社会保険労務士　杉山 史和（登録番号 22110051）</p>
+  <p>本レポートの試算は、現在の勤務時間および人員体制をもとに、2026年12月の想定シフトを仮に設定して作成したものです。実際のシフト・賃金水準・営業実態により結果は変動します。ご確認いただきたい事項への回答をいただき次第、実数に基づく最終版を作成いたします。</p>
+  <p style="margin-bottom:0">記載の法令内容は2026年8月2日時点のものです。</p>
+</footer>
+
+</div>
+</body>
+</html>
